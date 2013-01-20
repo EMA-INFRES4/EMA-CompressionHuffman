@@ -22,6 +22,17 @@ function run(){
 		algoSeuil();
 	}else if(document.getElementById('radmatriochkas').checked){
 		algoMatriochkas();
+	}else if(document.getElementById('radhuffman').checked){
+		var lstText = document.getElementById('txtcontent').value.split('');
+		if(debugMode()){
+			debug_output('Text en tableau :');
+			debug_output(lstText);
+		}
+		var huffman = encodeAndDecode(lstText);
+		debug_output('Taille strEncoded : ' + huffman.encoded.length);
+		debug_output('Taille strDecoded : ' + huffman.decoded.length);
+		debug_output('Ratio : ' + huffman.ratio);
+		debug_output('content == decoded ?  ' + (content == huffman.decoded ? 'oui !' : 'non...'));
 	}else{
 		alert('Il faut choisir un algo !');
 	}
@@ -31,7 +42,7 @@ function algoSeuil(){
 	var content = document.getElementById('txtcontent').value;
 	var maxDi   = parseFloat(document.getElementById('txtmaxdi').value);
 	var maxTri  = parseFloat(document.getElementById('txtmaxtri').value);
-	// Récupère les digrammes & les trigrammes & les monogrammes
+	// Rï¿½cupï¿½re les digrammes & les trigrammes & les monogrammes
 	var trigrammes   = extractItemsAndClean(content , 3 , maxTri);
 	var digrammes    = extractItemsAndClean(trigrammes.content , 2 , maxTri);
 	var monogrammes  = extractItemsAndClean(digrammes.content , 1 , 0);
@@ -40,11 +51,11 @@ function algoSeuil(){
 	debug_output('digrammes : '   + digrammes.items.length);
 	debug_output('monogrammes : ' + monogrammes.items.length);
 	toCSV(digrammes.items , 'proba');
-	// Création d'un tableau unique
+	// Crï¿½ation d'un tableau unique
 	var mergedItems = merge_items([trigrammes.items , digrammes.items , monogrammes.items]);
 	debug_output('total merged :' + mergedItems.length);
 	if(debugMode()){
-		debug_output('Eléments mergés :');
+		debug_output('Elï¿½ments mergï¿½s :');
 		for(var i = 0 ; i < mergedItems.length ; i++){
 			debug_output(mergedItems[i]);
 		}
