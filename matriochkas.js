@@ -1,6 +1,6 @@
 function algoMatriochkas(){
 	var content = document.getElementById('txtcontent').value;
-	// Récupération des trigrammes, digrammes et carctères
+	// Rï¿½cupï¿½ration des trigrammes, digrammes et carctï¿½res
 	var listTrigrammes = extractItems(content , 3);
 	var listDigrammes  = extractItems(content , 2);
 	var listCaractres  = extractItems(content , 1);
@@ -15,12 +15,12 @@ function algoMatriochkas(){
 		debug_output("\n**** CRACTERES ****\n"  + scan(listCaractres));
 	}
 	// Optimisation: On met dans des dicos
-	// pour éviter d'avoir à boucler trop de fois
+	// pour ï¿½viter d'avoir ï¿½ boucler trop de fois
 	var dicoTri = convert2dico(listTrigrammes);
 	var dicoDi  = convert2dico(listDigrammes);
 	var dicoChr = convert2dico(listCaractres);
 	
-	// On va créer le dictionnaire final
+	// On va crï¿½er le dictionnaire final
 	var dicoGrammes = [];
 	for(tri in dicoTri){
 		var tProb = dicoTri[tri].proba;
@@ -128,7 +128,7 @@ function extractItems(str , size){
 			lesItems[curItem] = 0;
 		}
 		nbTotal++;
-		// On incrémente
+		// On incrï¿½mente
 		lesItems[curItem]++;
 		i+= size;
 	}
