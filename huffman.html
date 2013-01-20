@@ -1,0 +1,422 @@
+<html>
+<head>
+<!--<script type="text/javascript" src="huffman_js-master/huffman_js-master/dist/huffman-0.9.0.min.js"></script>-->
+<script type="text/javascript" src="huffman-coder.js"></script>
+<script type="text/javascript" src="extractor.js"></script>
+<script type="text/javascript" src="matriochkas.js"></script>
+<script type="text/javascript" src="projet.js"></script>
+</head>
+<body>
+<table style="width: 100%;">
+	<tr>
+		<td style="width:300px;" valign="top">
+			<table>
+				<tr>
+					<td>Seuil Digram</td>
+					<td><input type="text" id="txtmaxdi" value="0.05" /></td>
+				</tr>
+				<tr>
+					<td>Seuil Trigram</td>
+					<td><input type="text" id="txtmaxtri" value="0.005" /></td>
+				</tr>
+				<tr>
+					<td>Debug mode</td>
+					<td><input type="checkbox" id="chkdebug" /></td>
+				</tr>
+				<tr>
+					<td>Algo</td>
+					<td>
+						<input type="radio" name="radalgo" id="radseuille" value="seuil" /> Seuil<br />
+						<input type="radio" name="radalgo" id="radmatriochkas" value="matriochkas" checked /> Matriochkas<br />
+					</td>
+				</tr>
+				<tr>
+					<td><button onclick="run();">RUN !</button></td>
+				</tr>
+			</table>
+		</td>
+		<td>
+			<textarea id="output" style="width:90%;height:300px;"></textarea>
+		</td>
+	</tr>
+</table>
+<script type="text/javascript">
+function debug_output(value){
+	document.getElementById('output').value = document.getElementById('output').value + "\n" + "=> " + value;
+}
+</script>
+<textarea id="txtcontent">
+On a fait de moi un diseur de bons mots. Je n’ai jamais dit un bon mot de ma vie; mais je tâche de dire, après mûre réflexion, sur beaucoup de choses, le mot juste.
+
+Je ne puis accepter cette réputation de faiseur de Nouvelles à la main au gros sel plus ou moins attique, telles que le Mercure du dix-neuvième siècle les a recueillies dans le Talleyrandana et l’Album perdu. Il eût été plus simple de les ajouter à un ouvrage que j’ai sur ma table et que je m’amuse souvent à feuilleter: L’Improvisateur, Recueil d’anecdotes et de bons mots, en 21 volumes in-12. C’est un Répertoire qui ne donnera jamais de l’esprit à personne, mais où on trouve des traits d’emprunt à placer dans la conversation, comme les lieux-communs de la rhétorique dans un discours.
+
+On m’a ainsi attribué ces anas à l’usage des oisifs qui les apprennent par coeur, et on m’a chargé de tout le petit esprit des salons de Paris et de la province. Si on ne prête qu’aux riches, encore faut-il que ce ne soit pas de la fausse monnaie; il en est dont j’accepterais assez volontiers la paternité, parce qu’ils caractérisent un homme ou un événement. Mais rien ne dure comme un préjugé ou une légende; j’ai bien peur que le vulgaire ne me juge sur cette surface; cependant les esprits d’élite verront bien que le mien est d’une autre étoffe.
+
+L’esprit n’est pas toujours un feu de cheminée, brillant comme sa flamme et qui s’envole avec ses étincelles, c’est parfois un flambeau qu’on ne promène pas sur deux siècles sans brûler des barbes vénérables et roussir quelques perruques. C’est aussi une arme de combat à deux tranchants, qu’il faut savoir manier comme un joujou pour ne pas se blesser. La flèche ne revient pas sur l’arc et, quand un mot est lâché, il est inutile de courir après; mais ces traits n’étaient pas lancés pour courir les ruelles avec les nouvelles du jour, et les sottises vont loin quand elles ont des ailes de papier.
+
+L’esprit est une ressource; il sert à tout et ne mène à rien. Le silence m’a beaucoup mieux réussi. Mon esprit ne m’a servi qu’à faire hardiment des sottises pour réparer celles des autres; mais je suis trop vieux serpent pour changer de peau. Si c’était à recommencer, je recommencerais, peut-être autrement, et je tomberais de Charybde en Scylla.
+
+Toute ma vie se résume dans mon Bréviaire. Il renferme l’ensemble des Principes et des Maximes des moralistes et des philosophes qui ont dirigé mes actes et ma conduite. Il ne me quitte jamais; je l’ai dans la tête et le voici:
+
+Celui qui est hors de la danse sait bien des chansons.
+
+Les méthodes sont les maîtres des maîtres.
+
+L’évangile anglais: Fais aux autres ce qu’ils te font.
+
+Je n’oublie rien et je ne pardonne pas.
+
+Il y a des fautes que j’excuse et des passions que je pardonne, ce sont les miennes.
+
+L’inertie est une vertu, l’activité est un vice. Savoir attendre est une habileté en politique; la patience a fait souvent les grandes positions. On doit être actif quand l’occasion passe; on peut être paresseux et nonchalant quand on l’attend.
+
+Il y a des occasions qui ont un faux chignon; quand on veut le saisir, il vous reste dans la main.
+
+Pour prendre un parti, il faut d’abord savoir si celui qui nous conviendrait sera assez fort pour justifier l’espérance du succès, sans quoi il y aurait folie à se mêler de la partie.
+
+Laplace, dans sa théorie scientifique, n’a pas eu besoin de Dieu, cette hypothèse; dans mon système politique, je me suis passé de la morale, où le coeur est la dupe de l’esprit.
+
+Il faut traiter légèrement les grandes affaires et les choses d’importance, et sérieusement les plus frivoles et les plus inutiles. Cette méthode a l’avantage que les esprits ordinaires ne peuvent s’en servir.
+
+Tout le monde peut être utile; personne n’est indispensable.
+
+On n’est jamais indépendant des hommes, surtout dans une condition élevée.
+
+Les hommes sont comme les statues, il faut les voir en place.
+
+Un homme médiocre dans l’élévation est placé sur une éminence, du haut de laquelle tout le monde lui paraît petit et d’où il paraît petit à tout le monde.
+
+L’art de mettre les hommes à leur place est le premier peut-être dans la science du gouvernement; mais celui de trouver la place des mécontents est à coup sûr le plus difficile; et présenter à leur imagination des lointains, des perspectives où puissent se prendre leurs pensées et leurs désirs, est je crois, une des solutions de cette difficulté sociale.
+
+Les présomptueux se présentent; les hommes d’un vrai mérite aiment à être requis.
+
+Quand vient la fortune, les petits hommes se redressent, les grands hommes se penchent.
+
+Il faut mener les hommes sans leur faire sentir le joug, asservir les volontés sans les contraindre.
+
+Le mépris doit être le plus mystérieux des sentiments.
+
+Toutes les fois que le pouvoir parle au peuple, on peut être sûr qu’il demande de l’argent ou des soldats.
+
+Un état chancelle quand on ménage les mécontents; il touche à sa ruine quand la crainte les élève aux premières dignités.
+
+On ne respecte plus rien en France.
+
+Faire garder les pauvres en bourgeron par les pauvres en uniforme, voilà le secret de la tyrannie et le problème des gouvernements.
+
+En vain autour des trônes les genoux fléchissent, les fronts s’inclinent, les yeux veillent, les mains obéissent, nos coeurs sont à nous seuls.
+
+Il faut avoir été berger pour apprécier le bonheur des moutons.
+
+En voyant les petits à l’oeuvre, on se réconcilie avec les grands.
+
+Il y a beaucoup de mauvaises chances et il y en a aussi quelques bonnes; c’est le cheveu de l’Occasion. La Fortune frappe au moins une fois; si on n’est pas prêt à la recevoir, elle entre par la porte et sort par la fenêtre.
+
+Le bon Dieu nous a mis des yeux dans le front pour que nous regardions toujours devant nous et jamais en arrière.
+
+Dans l’incertitude d’un danger, il vaut mieux réserver son énergie pour le combattre quand il arrive, que de l’user à le voir venir de loin; il est toujours assez tôt de serrer la main du diable quand on le rencontre.
+
+Si les choses ne vont pas comme on le comprend, le mieux est d’attendre et d’y peu penser.
+
+Patience et longueur de temps Font plus que force ni que rage.
+
+Quand les cartes sont brouillées et que les affaires paraissent désespérées, il n’y a qu’à laisser aller les choses, comme l’eau coule à sa pente; elles finissent par se débrouiller toutes seules et s’arranger d’elles-mêmes. Rien faire et laisser dire.
+
+Dans les choses d’importance, il ne faut pas demander de conseils; il faut peser, oser et agir.
+
+On doit suivre ses inspirations, et ne jamais se repentir ni du bien, ni du mal, ni des sottises.
+
+Quand tout est perdu, c’est l’heure des grandes âmes.
+
+Les principes reposent sur leur certitude et leur utilité; la morale est fondée sur l’intérêt qui la sert.
+
+Les hommes sont capricieux, ondoyants et divers, les événements mobiles, les idées changeantes; tout meurt, se transforme, se renouvelle, rien ferme ne demeure. Le cours naturel des choses offre de meilleures occasions que l’intelligence, l’imagination, l’ingéniosité, l’esprit, la volonté n’en peuvent faire naître, créer, trouver, inventer.
+
+Tout arrive et doit arriver par la combinaison et le jeu des événements. Tout s’en va et tout revient. On revient de tout et on revient à tout. Ceux qui disent qu’ils sont revenus de tout ne sont jamais allés nulle part.
+
+Rien de grand n’a de grands commencements, ni les chênes, ni les fleuves, ni les royaumes, ni les hommes de génie.
+
+Il faut se garder des premiers mouvements, parce qu’ils sont presque toujours honnêtes.
+
+vÄ force de converser avec un sphinx, on se tire de ses énigmes.
+
+Le pouvoir de tout faire n’en donne pas le droit.
+
+Sois doux avec le faible et terrible au superbe.
+
+C’est prodigieux tout ce que ne peuvent pas ceux qui peuvent tout.
+
+Si c’est possible, c’est fait; si c’est impossible, cela se fera.
+
+Celui qui ne comprend pas un regard ne comprendra pas davantage une longue explication.
+
+La parole a été donnée à l’homme pour déguiser sa pensée.
+
+Il faut imposer et en imposer.
+
+Celui qui ne tient compte que des intérêts fait un calcul aussi faux que celui qui ne tient compte que des sentiments; il faut trouver le secret des affaires et posséder l’art de s’insinuer dans les coeurs.
+
+Oui et Non sont les mots les plus courts et les plus faciles à prononcer, et ceux qui demandent le plus d’examen.
+
+Un long discours n’avance pas plus les affaires qu’une robe traînante n’aide à la marche.
+
+Une parfaite droiture est la plus grande des habiletés; la vérité devient un calcul et la franchise un moyen.
+
+Il y a une arme plus terrible que la calomnie, c’est la vérité.
+
+Toujours par quelques endroits fourbes se laissent prendre.
+
+Le vrai moyen d’être trompé, c’est de se croire plus fin que les autres.
+
+La plus grande des illusions est de croire qu’on n’en a pas, ou qu’on n’en a plus.
+
+Quand on part, on arrive toujours, mais il faut partir.
+
+On ne va jamais si loin que lorsqu’on ne sait pas où l’on va.
+
+Si on savait où l’on va, on ne marcherait pas.
+
+Quand on a dix pas à faire et qu’on en a fait neuf, on n’est qu’à moitié chemin.
+
+C’est toujours un rôle ingrat, pour ne pas dire inutile et dangereux, de jouer au prophète en son pays.
+
+Le secret de plaire dans le monde est de se laisser apprendre des choses qu’on sait par des gens qui ne les savent pas.
+
+Des sottises faites par des gens habiles, des extravagances dites par des gens d’esprit, des crimes commis par d’honnêtes gens, voilà les révolutions.
+
+Le monde moral et politique, comme le monde physique, n’a plus ni printemps ni automne; on ne voit qu’opinions qui glacent ou opinions qui brûlent.
+
+Une monarchie doit être gouvernée avec des démocrates, et une république avec des aristocrates.
+
+C’est un grand malheur pour une nation qu’un bon homme dans une place qui exige un grand homme.
+
+Il faut se défier de tout homme qui n’a pas été républicain avant trente ans, et de celui qui persiste à l’être passé cet âge.
+
+Si quelqu’un vous dit qu’il n’est d’aucun parti, commencez par être sûr qu’il n’est pas du vôtre.
+
+On peut quelquefois venir à bout des sentiments; des opinions, jamais.
+
+Il n’y a qu’une seule chose que nous aimions à voir partager avec nous, quoiqu’elle nous soit bien chère, c’est notre opinion.
+
+La Renommée est une grande causeuse, elle aime souvent à passer les limites de la vérité; mais cette vérité a bien de la force; elle ne laisse pas longtemps le monde crédule abandonné à la tromperie.
+
+Les Anciens représentaient la Vérité toute nue, sans doute pour que chacun l’habille à sa façon; mais si on veut lui laisser son nom, son caractère et sa beauté, elle doit être exposée sans voiles et dépouillée des vains ornements dont on a coutume de l’affubler. Pourquoi la parer d’un manteau de cour, la draper dans ce costume brillant et trompeur du Mensonge, bon pour parer les mannequins et les marionnettes? Pourquoi s’ingénier à défigurer, dénaturer et déshonorer la Vérité, quand le silence est si commode?
+
+Dans une réunion de diplomates, on ne met pas la franchise à la porte, parce qu’elle n’y est jamais entrée.
+
+Sans l’impassibilité à la vue du sang, au spectacle de la douleur et de ses bruyants témoignages, il n’y a pas de chirurgien. Sans l’insensibilité des passions, il n’y a pas de stoïcien, sans l’indifférence au milieu du jeu des événements, il n’y a pas d’homme d’état. Le chrétien qui entre dans le cirque et qui défaille à l’aspect des bêtes féroces est une victime, ce n’est pas un martyr.
+
+L’ambition est l’exercice des facultés intelligentes; c’est une corde muette dans les âmes passionnées.
+
+On n’est quelque chose dans le monde qu’à la condition de ne pas valoir beaucoup mieux que lui.
+
+Je n’ai pas besoin d’espérer pour entreprendre, ni de réussir pour persévérer.
+
+Tout est grand dans le temple de la faveur, excepté les portes qui sont si basses qu’il faut se courber pour y entrer.
+
+Tout le monde brigue les faveurs, parce que peu de gens ont droit aux récompenses.
+
+Les grandes places sont comme les rochers élevés, les aigles et les reptiles seuls y parviennent.
+
+Il n’y a que deux façons de s’élever, par son talent ou par l’imbécillité des autres.
+
+Le moment difficile n’est pas l’heure de la lutte, c’est celle du succès.
+
+Sois lion dans le triomphe, renard dans la défaite, colimaçon dans le conseil, oiseau à l’heure de l’action.
+
+Celui qui est vraiment fort sait quelquefois plier.
+
+Pesez les hommes, ne les comptez pas.
+
+Les hommes adroits et légers surnagent comme le liège au milieu des tempêtes.
+
+Qui a été mordu par le serpent se méfie des cordes.
+
+On ne croit plus aux sauveurs de la patrie; ils ont gâté le métier.
+
+Tout ce qui est accepté comme vérité par la foule est généralement un préjugé ou une sottise.
+
+Lorsqu’une société est impuissante à créer un gouvernement, il faut que le gouvernement crée une société.
+
+La politique est un étang où les brochets font courir les carpes.
+
+Faute de richesses, une nation n’est que pauvre; faute de patriotisme, c’est une pauvre nation.
+
+C’est moins par la rareté des maladies qu’on peut juger la force du tempérament des hommes et des nations, que par la promptitude et la vigueur du rétablissement.
+
+En toutes choses, les commencements sont beaux, les milieux fatigants et les fins pitoyables.
+
+Il ne faut jamais se fâcher contre les choses, parce que cela ne leur fait rien du tout.
+
+Les oies font assurément moins de sottises qu’on n’en écrit avec leurs plumes.
+
+La plus dangereuse des flatteries est la médiocrité de ce qui nous entoure.
+
+Rien ne doit inspirer un orgueil plus légitime que la haine avec laquelle les hommes supérieurs nous poursuivent; ils n’en ont que pour ceux qu’ils croient au-dessus d’eux; les autres ne leur inspirent que de la colère ou du mépris.
+
+Quand vous êtes enclume, prenez patience; quand vous êtes marteau, frappez droit et bien.
+
+La puissance ne consiste pas à frapper fort et souvent, mais à frapper juste.
+
+Il y a des gens qui n’ont même pas leur bêtise à eux.
+
+Si un sot vous trompe plus de cinq minutes, c’est que vous et lui faites la paire.
+
+Les gens qui ne font rien se croient capables de tout faire.
+
+La plus mauvaise roue d’un chariot est celle qui fait le plus de bruit.
+
+Je supporte la méchanceté, parce que je puis me défendre contre un homme méchant; mais je ne supporte pas la bêtise, parce que je suis sans armes contre un être qui m’ennuie.
+
+Quand l’homme rencontre l’homme, il fait presque toujours une triste rencontre.
+
+On s’empare des couronnes, on ne les escamote pas.
+
+Je crains plus une armée de cent moutons commandée par un lion, qu’une armée de cent lions commandée par un mouton.
+
+Un homme seul contre la foule aura toujours raison d’elle avec de l’éloquence, de l’énergie et du sang-froid comme l’abbé Maury, qu’on voulait envoyer dire la messe chez Pluton: Voulez-vous la servir, voici mes burettes?
+
+A la Lanterne! Y verrez-vous plus clair?
+
+La diplomatie est un duel, où il s’agit d’être plus fort et plus adroit que l’adversaire qu’on a devant soi.
+
+Où il y a un traité, il y a un canif.
+
+L’encre des diplomates s’efface vite, quand on ne répand pas dessus de la poudre à canon.
+
+Rapprocher les hommes n’est pas le plus sûr moyen de les réunir, et à force de vouloir rapprocher les peuples, on s’expose à les mettre à portée de canon.
+
+Le sentier de Tout-à-l’heure et la route de Demain conduisent au Château de Rien-du-Tout.
+
+On perd bien du temps à n’avoir pas le temps.
+
+Les hommes perdent bien du temps quand ils sont éveillés.
+
+La vertu est parfois récompensée et le vice puni, exceptions qui confirment la règle.
+
+Agiter le peuple avant de s’en servir, sage maxime; mais il est inutile d’exciter les citoyens à se mépriser les uns les autres; ils sont assez intelligents pour se mépriser tout seuls.
+
+Plus l’herbe est serrée, plus la faux mord.
+
+J’ai vu le fond de ce qu’on appelle les honnêtes gens, c’est hideux. La question est de savoir s’il y a des honnêtes gens, quand l’intérêt ou la passion est en jeu.
+
+Les gens d’esprit promettent, ne tiennent pas, et finissent pas payer le double de ce qu’ils ont promis.
+
+L’obligé prend un premier service reçu pour le droit d’en demander et d’en obtenir un second.
+
+Il y a un grand système de compensation, qui règle tout en ce monde par une équitable répartition des grandes et petites misères de la vie, du mal par le bien et du bien par le mal.
+
+Il ne faut pas trancher le noeud gordien qu’on peut dénouer.
+
+Il n’y a point d’accident si malheureux dont un homme habile ne tire quelque avantage, ni de si heureux qu’un imprudent ne puisse tourner à son préjudice.
+
+Une carafe d’eau suffit pour arrêter un commencement d’incendie; un instant après, un seau; plus tard, il faut des pompes, et la maison brûle.
+
+Tout phénomène physique a son semblable dans l’ordre moral. La réaction est égale à l’action; une tempête endort la nature, une révolution calme un peuple, une émotion violente apaise l’âme humaine.
+
+vÄ l’exception des sciences exactes, il n’y a rien qui me paraisse assez clair pour ne pas laisser beaucoup de liberté aux opinions, et presque sur tout on peut dire tout ce qu’on veut.
+
+Partout où il y a de l’eau, il n’y a pas toujours des grenouilles; mais partout où il y a des grenouilles, il y a de l’eau.
+
+Si le livre des Pourquoi n’était pas si gros, il y aurait moins de Parce que.
+
+Quand il n’y a pas une raison, il y a une cause.
+
+De toutes les inventions qu’on appelle des découvertes utiles à l’humanité, la première est assurément l’imprimerie, et qu’est-ce que l’imprimerie, en creux ou en relief? L’empreinte du sabot du cheval d’Attila sur une argile où l’herbe ne poussait plus. On en a usé, abusé et mésusé, comme de toutes les bonnes choses.
+
+Les légendes ont été transmises par les fripons d’un siècle aux nigauds des siècles suivants.
+
+La barbarie est toujours à deux pas, rôdant autour de la civilisation; dès qu’on lâche pied, elle revient.
+
+Il y a des montagnes qui accouchent d’une souris, et d’autres qui accouchent d’un volcan.
+
+L’homme est une intelligence contrariée par des organes.
+
+La franchise est toujours invoquée pour exprimer les choses désagréables à entendre; les compliments s’en passent.
+
+Les hommes secrets disent, sans qu’on leur demande, ce qu’ils ont à dire, ils ne répondent jamais.
+
+Toute révélation d’un secret est la faute de celui qui l’a confié.
+
+Tout ce qu’on dit sera répété, tout ce qu’on écrit sera publié, et tout se retournera contre vous.
+
+Secret de deux, secret de Dieu; secret de trois, secret de tous.
+
+Enseigne à ta langue à dire: Je ne sais pas.¬ª
+
+La parole que tu gardes est ton esclave; celle que tu as lâchée est ton maître.
+
+C’est un grand avantage de n’avoir rien dit ni rien écrit, mais il ne faut pas en abuser.
+
+Lorsque vous aurez, par nécessité, un confident à prendre, lorsqu’un dévouement vous sera absolument nécessaire, demandez-le toujours à la jeunesse, rarement à l’âge mûr, à la vieillesse jamais.
+
+C’est un don funeste de savoir déchiffrer les mystérieux hiéroglyphes que le Temps burine sur le masque humain et de lire sous la peau.
+
+La jeunesse peut avoir de la patience, parce qu’elle a de l’avenir: Patiens quia longa; le vieillard n’en a plus: Impatiens quia brevis.
+
+On a dit que le Traité de la Vieillesse donnait envie de vieillir; mais on voit bien que c’est une oeuvre de jeunesse de Cicéron.
+
+Les années ne font pas les sages, elles ne font que des vieillards.
+
+On ne rajeunit pas, on prolonge la jeunesse.
+
+Il arrive un moment où on ne voit plus que le revers de toutes les médailles.
+
+Il ne faut pas demander à la vie plus qu’elle ne peut donner.
+
+On est vieux quand on n’espère plus rien.
+
+La vie se passe à dire: Plus tard, et à s’entendre dire: Trop tard.
+
+La vie est une montagne qu’il faut gravir debout et descendre assis.
+
+La vieillesse est un tyran qui défend, sous peine de mort, tous les plaisirs de la jeunesse.
+
+La vie serait assez supportable sans ses plaisirs.
+
+Les affections légitimes ne viennent pas des sentiments de la nature et des liens du sang, mais de la raison.
+
+On doit se conduire avec ses amis comme s’ils devaient être un jour des ennemis, et avec ses ennemis comme s’ils pouvaient devenir des amis.
+
+Un ami véritable est une douce chose, à la condition qu’il ne soit pas un grand homme; mais il faudrait aller au Monomotapa.
+
+Ne dites jamais de mal de vous, vos amis en diront toujours assez.
+
+Mes amis, il n’y a pas d’amis.
+
+Après l’affection que je me porte, les autres sont inutiles; je n’ai besoin ni d’aimer ni d’être aimé.
+
+Il n’est pas facile de haïr toujours; ce sentiment ne demande souvent qu’un prétexte pour s’évanouir; ce n’est pas le pardon, c’est l’oubli.
+
+Un monarque, consultant Salomon sur l’inscription à mettre sur le sceau royal, demandait que ce fût une maxime propre tout à la fois à modérer la présomption et à soulager l’abattement aux jours de l’adversité. Salomon lui donna cette devise:
+
+Et ceci aussi passera.
+
+L’amour est un sentiment, une sottise ou une affaire, et chacun a sa lunette et son aune. Les conquêtes coûtent cher; il faut savoir payer sa gloire quand on couche sur le champ de bataille. Bien que les femmes aient l’incomparable talent, l’art suprême de persuader au vainqueur qu’elles ont capitulé, vaincues par ses qualités personnelles et non pour le prestige que donnent le titre, le rang, le pouvoir, la fortune, elles sont rarement désintéressées. Le désir de se venger d’une rivale, en lui soufflant son chevalier favori, est une des principales causes du succès des hommes dits à bonnes fortunes. Le métier de Don Juan n’est pas difficile.
+
+Il faut adorer les femmes et ne pas les aimer.
+
+Toutes les fois que j’ai visité une capitale, on m’a prévenu que j’étais dans la ville la plus corrompue de l’Europe, et c’était vrai.
+
+L’argent, dont on fait un dieu, n’a qu’un pouvoir bien limité, si on considère les choses qu’il ne procure à aucun prix. Les misérables voient le bonheur dans la fortune, et malgré ses réels avantages, les riches ne l’y trouvent jamais. Né dans cet état si envié, je n’ai pas tardé à reconnaître que les biens véritables, incontestés, sont à tout le monde: la jeunesse, la santé, l’intelligence, la beauté, l’amour; pour ces biens-là, pas de classe privilégiée; le plus pauvre peut les avoir, le plus riche ne peut pas les acheter. On a beau dire:
+
+Jamais surintendant ne trouva de cruelles.
+
+Quand cela serait, il en a toujours pour son argent.
+
+Il y a certainement de nobles créatures qui relèvent la vie et honorent l’humanité, des êtres bons, justes, honnêtes, supérieurs, qui devraient être les chiens de berger des troupeaux humains. Mais si on interroge l’histoire et si on observe le monde, on constatera que l’ostracisme, la persécution et la mort n’en ont jamais épargné un. C’est une conspiration générale. Le génie, la vertu, le caractère, la beauté, tout ce qui constitue l’aristocratie personnelle, la seule vraie, est la bête noire de ces moutons stupides, absurdes, odieux et ridicules; c’est pourquoi ils sont manoeuvrés par les loups et victimes des animaux de carnage, tondus, écorchés, tués et dévorés. Ils proscrivent Aristide, acclament César, et tombent à genoux devant Attila.
+
+Odi profanum vulgus et arceo.‚à une certaine hauteur, le mépris du vulgaire fait presque l’illusion d’une vertu.
+
+Il n’y a qu’une puissance souveraine: S. M. La Mort, la Fiancée de l’homme, la Reine du monde. L’homme est un condamné à mort avec sursis, qui se promène dans le préau en attendant l’appel de son nom. Il peut lire cet avertissement sur le cadran de sa geôle: Omnes vulnerant, ultima necat. Toutes les heures blessent, la dernière tue.
+
+Tout peut s’ajourner, excepté l’heure de la mort.
+
+Si l’expérience des autres pouvait servir à quelque chose, il suffirait de se faire un Bréviaire comme celui-ci pour marcher d’un pied sûr dans la vie; et l’expérience personnelle est un médecin qui arrive toujours après la maladie, une étoile qui se lève quand on va se coucher.
+
+Voilà, comme dit Ménalque, toutes les pantoufles que j’ai sur moi.
+
+</textarea>
+
+</body>
+</html>
